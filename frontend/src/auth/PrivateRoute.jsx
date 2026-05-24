@@ -1,12 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './authContext';
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  const token = localStorage.getItem('erp_token');
 
-  if (loading) return null;
-
-  if (!user) {
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
