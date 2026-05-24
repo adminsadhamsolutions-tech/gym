@@ -5,8 +5,8 @@ import { useAuth } from '../auth/authContext';
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@gymerp.com');
-  const [password, setPassword] = useState('admin123');
+const [email, setEmail] = useState('orian_fitness');
+const [password, setPassword] = useState('Netrajaga@2022');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
