@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/login', { email, password });
+    const response = await axios.post('/auth.php', { email, password });
     const token = response.data.token;
     localStorage.setItem('erp_token', token);
     setUser({ token });
