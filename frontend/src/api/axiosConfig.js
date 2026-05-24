@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: "https://orienfitness.in/api", // ✅ FIXED
+  baseURL: "https://api.orienfitness.in/api", // ✅ FINAL CORRECT
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
