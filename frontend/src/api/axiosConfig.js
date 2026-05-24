@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
-
 const axiosInstance = axios.create({
-  baseURL: API_BASE,
+  baseURL: "https://orienfitness.in/api", // ✅ FIXED
   headers: {
     'Content-Type': 'application/json',
   },
