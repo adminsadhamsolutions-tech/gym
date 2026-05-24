@@ -5,21 +5,31 @@ import { useAuth } from '../auth/authContext';
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-const [email, setEmail] = useState('orian_fitness');
-const [password, setPassword] = useState('Netrajaga@2022');
+
+  const [email, setEmail] = useState('admin@gymerp.com');
+  const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
       await login(email, password);
-      navigate('/');
+
+      // small delay ensures state sync
+      setTimeout(() => {
+        navigate('/');
+      }, 100);
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Check your credentials.');
+      setError(
+        err?.response?.data?.message ||
+        err.message ||
+        'Login failed. Check your credentials.'
+      );
     } finally {
       setLoading(false);
     }
@@ -28,12 +38,18 @@ const [password, setPassword] = useState('Netrajaga@2022');
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-slate-800 p-4">
       <div className="w-full max-w-xl rounded-[32px] border border-slate-800 bg-slate-950 p-10 shadow-soft">
+        
         <h1 className="text-4xl font-semibold text-white">Admin Login</h1>
-        <p className="mt-3 text-slate-400">Secure access to your gym management ERP. Use admin credentials to continue.</p>
+        <p className="mt-3 text-slate-400">
+          Secure access to your gym management ERP.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+
           <div>
-            <label className="block text-sm font-medium text-slate-300">Email</label>
+            <label className="block text-sm font-medium text-slate-300">
+              Email
+            </label>
             <input
               type="text"
               value={email}
@@ -42,8 +58,11 @@ const [password, setPassword] = useState('Netrajaga@2022');
               className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-900 px-4 py-3 text-white shadow-inner"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-slate-300">Password</label>
+            <label className="block text-sm font-medium text-slate-300">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -53,7 +72,11 @@ const [password, setPassword] = useState('Netrajaga@2022');
             />
           </div>
 
-          {error && <div className="rounded-3xl border border-red-600 bg-red-950 px-4 py-3 text-red-300">{error}</div>}
+          {error && (
+            <div className="rounded-3xl border border-red-600 bg-red-950 px-4 py-3 text-red-300">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
@@ -62,6 +85,7 @@ const [password, setPassword] = useState('Netrajaga@2022');
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
+
         </form>
       </div>
     </div>
