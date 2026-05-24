@@ -1,0 +1,4 @@
+vendor/
+uploads/members/
+.env
+.DS_Store

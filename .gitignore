@@ -1,0 +1,11 @@
+# Node and build artifacts
+frontend/node_modules/
+frontend/dist/
+
+# Backend uploads and environment
+backend/uploads/
+backend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
