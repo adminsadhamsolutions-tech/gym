@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": ["node"]
-  },
-  "include": ["vite.config.*", "vite.config.*.ts"]
-}

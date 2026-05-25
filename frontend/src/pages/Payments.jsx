@@ -144,16 +144,19 @@ const Payments = () => {
       const whatsappMessage = `Hi ${member.full_name}!\n\nPayment Receipt\nAmount: ₹${paymentRecord.amount}\nMode: ${paymentRecord.type === 'cash' ? 'Cash' : 'Online'}\nDate: ${new Date(paymentRecord.created_at).toLocaleDateString('en-IN')}\n\nThank you for your payment!`;
 
       const whatsappUrl = `https://wa.me/${member.mobile_number.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
+      // optimistic success: WhatsApp opened for user to send
       window.open(whatsappUrl, '_blank');
-
-      await axios.post('/whatsapp', {
-        action: 'send_payment_receipt',
-        member_id: member.id,
-        amount: paymentRecord.amount,
-        type: paymentRecord.type
-      });
-
-      setSuccessMessage('Payment receipt sent successfully!');
+      setSuccessMessage('WhatsApp opened — please send the receipt message from WhatsApp.');
+      try {
+        await axios.post('/whatsapp', {
+          action: 'send_payment_receipt',
+          member_id: member.id,
+          amount: paymentRecord.amount,
+          type: paymentRecord.type
+        });
+      } catch (e) {
+        console.error('WhatsApp post failed:', e);
+      }
     } catch (err) {
       setError('Unable to send payment receipt.');
     } finally {

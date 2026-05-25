@@ -1,15 +1,38 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   const [email, setEmail] = useState('admin@gymerp.com');
   const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const AUTO_LOGIN = (import.meta.env.VITE_AUTO_LOGIN || import.meta.env.VITE_DEV_AUTO_LOGIN) === 'true';
+
+  // Auto-submit on mount if dev auto-login is enabled
+  useEffect(() => {
+    if (AUTO_LOGIN && !user && !loading) {
+      setLoading(true);
+      login(email, password).then(() => {
+        setTimeout(() => navigate(from, { replace: true }), 100);
+      }).catch(err => {
+        setError(err.message || 'Auto-login failed');
+        setLoading(false);
+      });
+    }
+  }, [AUTO_LOGIN, user, loading, login, navigate, from, email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,8 +64,20 @@ const Login = () => {
         
         <h1 className="text-4xl font-semibold text-white">Admin Login</h1>
         <p className="mt-3 text-slate-400">
-          Secure access to your gym management ERP.
+          {AUTO_LOGIN ? 'Accessing dashboard...' : 'Secure access to your gym management ERP.'}
         </p>
+
+        {AUTO_LOGIN && loading && (
+          <div className="mt-8 text-center">
+            <div className="inline-flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+            <p className="mt-4 text-slate-300">Auto-logging in...</p>
+          </div>
+        )}
+
+        {!AUTO_LOGIN && (
+          <>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
 
@@ -87,6 +122,8 @@ const Login = () => {
           </button>
 
         </form>
+        </>
+        )}
       </div>
     </div>
   );

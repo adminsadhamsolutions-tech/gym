@@ -137,13 +137,17 @@ const MemberForm = ({ mode }) => {
         package_name: memberData.package_name || packages.find((pkg) => String(pkg.id) === String(memberData.package_id))?.name || 'Standard'
       }));
       window.open(whatsappUrl, '_blank');
-      if (memberData.id) {
-        await axios.post('/whatsapp', {
-          action: 'send_join_message',
-          member_id: memberData.id
-        });
+      setSuccessMessage('WhatsApp opened — please send the welcome message from WhatsApp.');
+      try {
+        if (memberData.id) {
+          await axios.post('/whatsapp', {
+            action: 'send_join_message',
+            member_id: memberData.id
+          });
+        }
+      } catch (e) {
+        console.error('WhatsApp post failed:', e);
       }
-      setSuccessMessage('Welcome message sent successfully!');
       setTimeout(() => navigate('/members'), 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to send WhatsApp message.');

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaSearch, FaTrashAlt, FaEdit, FaWhatsapp, FaEye } from 'react-icons/fa';
-import axios from '../api/axiosConfig';
+import axios, { BACKEND_ASSET_URL } from '../api/axiosConfig';
 import Layout from '../components/layout/Layout';
 import Loader from '../components/ui/Loader';
 import Alert from '../components/ui/Alert';
@@ -64,17 +64,27 @@ const Members = () => {
     try {
       const whatsappUrl = buildWhatsAppUrl(member.mobile_number, buildExpiryMessage(member));
       window.open(whatsappUrl, '_blank');
-      await axios.post('/whatsapp', {
-        action: 'send_expiry_alert',
-        member_id: member.id
-      });
-      setMembers(members.map((m) => (m.id === member.id ? { ...m, renewal_message_status: 'sent' } : m)));
-      setSuccessMessage('WhatsApp message sent successfully!');
+      // show optimistic success (WhatsApp app opened for user)
+      setSuccessMessage('WhatsApp opened — please send the message from WhatsApp.');
+      try {
+        await axios.post('/whatsapp', {
+          action: 'send_expiry_alert',
+          member_id: member.id
+        });
+        setMembers(members.map((m) => (m.id === member.id ? { ...m, renewal_message_status: 'sent' } : m)));
+      } catch (e) {
+        // server logging may fail (CORS or server); keep optimistic UI but log error
+        console.error('WhatsApp post failed:', e);
+      }
     } catch (err) {
-      setError('Unable to send WhatsApp alert.');
+      setError('Unable to open WhatsApp.');
     } finally {
       setSendingWhatsapp(null);
     }
+  };
+
+  const buildAssetUrl = (assetPath) => {
+    return `${BACKEND_ASSET_URL.replace(/\/+$/, '')}/${String(assetPath).replace(/^\/+/, '')}`;
   };
 
   const handleViewDetails = (member) => {
@@ -84,7 +94,7 @@ const Members = () => {
 
   const handleViewImage = (member) => {
     if (member.photo) {
-      setSelectedImage(`http://localhost/gym/backend/${member.photo}`);
+      setSelectedImage(buildAssetUrl(member.photo));
       setImagePreviewOpen(true);
     }
   };
@@ -171,7 +181,7 @@ const Members = () => {
                           className="relative group"
                         >
                           <img
-                            src={`http://localhost/gym/backend/${member.photo}`}
+                            src={buildAssetUrl(member.photo)}
                             alt={member.full_name}
                             className="h-12 w-12 rounded-2xl object-cover cursor-pointer transition hover:opacity-80"
                             onError={(e) => {
@@ -273,7 +283,7 @@ const Members = () => {
             {selectedMember.photo && (
               <div className="flex justify-center">
                 <img
-                  src={`http://localhost/gym/backend/${selectedMember.photo}`}
+                  src={buildAssetUrl(selectedMember.photo)}
                   alt={selectedMember.full_name}
                   className="h-32 w-32 rounded-2xl object-cover"
                   onError={(e) => {

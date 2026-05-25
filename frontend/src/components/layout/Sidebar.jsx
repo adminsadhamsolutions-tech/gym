@@ -10,6 +10,7 @@ import {
   FaSync,
   FaReceipt
 } from 'react-icons/fa';
+import { BACKEND_ASSET_URL } from '../../api/axiosConfig';
 
 const navItems = [
   { label: 'Dashboard', path: '/', icon: FaChartLine },
@@ -60,7 +61,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           <div className="px-6 py-8 text-center">
             <div className="mx-auto flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-md dark:border-slate-700 dark:bg-slate-800">
               <img
-                src="http://localhost/gym/backend/uploads/gymlogo.jpg"
+                src={`${BACKEND_ASSET_URL.replace(/\/+$/, '')}/uploads/gymlogo.jpg`}
                 alt="Gym Logo"
                 className="h-full w-full object-contain p-2"
                 onError={(e) => {

@@ -58,14 +58,18 @@ const Renewals = () => {
     try {
       const whatsappUrl = buildWhatsAppUrl(member.mobile_number, buildExpiryMessage(member));
       window.open(whatsappUrl, '_blank');
-      await axios.post('/whatsapp', {
-        action: 'send_renewal_reminder',
-        member_id: member.id
-      });
-      setMembers(members.map((m) => (m.id === member.id ? { ...m, renewal_message_status: 'sent' } : m)));
-      setSuccessMessage('Renewal alert sent successfully!');
+      setSuccessMessage('WhatsApp opened — please send the renewal message from WhatsApp.');
+      try {
+        await axios.post('/whatsapp', {
+          action: 'send_renewal_reminder',
+          member_id: member.id
+        });
+        setMembers(members.map((m) => (m.id === member.id ? { ...m, renewal_message_status: 'sent' } : m)));
+      } catch (e) {
+        console.error('WhatsApp post failed:', e);
+      }
     } catch (err) {
-      setError('Unable to send renewal reminder.');
+      setError('Unable to open WhatsApp.');
     } finally {
       setSendingWhatsapp(null);
     }
