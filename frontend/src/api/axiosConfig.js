@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE || 'https://api.orienfitness.in/api';
-const BACKEND_ASSET_URL = import.meta.env.VITE_BACKEND_ASSET_URL || import.meta.env.VITE_IMAGE_URL || 'https://api.orienfitness.in/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE || '/api';
+const BACKEND_ASSET_URL = import.meta.env.VITE_BACKEND_ASSET_URL || import.meta.env.VITE_IMAGE_URL || '/api';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

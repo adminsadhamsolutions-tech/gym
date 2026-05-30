@@ -1,50 +1,52 @@
 import { createContext, useContext, useState } from 'react';
 import axios from '../api/axiosConfig';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const AUTO_LOGIN = (import.meta.env.VITE_AUTO_LOGIN || import.meta.env.VITE_DEV_AUTO_LOGIN) === 'true';
   const [user, setUser] = useState(() => {
-    const existing = localStorage.getItem('erp_token');
-    if (existing) return existing;
-    if (AUTO_LOGIN) {
-      const token = `dev-token-${Date.now()}`;
-      localStorage.setItem('erp_token', token);
-      return token;
-    }
-    return null;
+    const savedUser = localStorage.getItem('erp_user');
+    return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [token, setToken] = useState(() => localStorage.getItem('erp_token'));
 
-  const login = async (email, password) => {
-    if (AUTO_LOGIN) {
-      // Development shortcut: bypass backend auth
-      const token = `dev-token-${Date.now()}`;
-      localStorage.setItem('erp_token', token);
-      setUser(token);
-      return;
+  const isAuthenticated = Boolean(token);
+
+  const login = async ({ email, password }) => {
+    const response = await axios.post('/login', { email, password });
+    const payload = response?.data;
+    if (!payload?.success || !payload?.token) {
+      throw new Error(payload?.message || 'Unable to log in.');
     }
 
-    const res = await axios.post('/login', { email, password });
-
-    if (res.data.success) {
-      localStorage.setItem('erp_token', res.data.token);
-      setUser(res.data.token);
-    } else {
-      throw new Error(res.data.message);
+    localStorage.setItem('erp_token', payload.token);
+    if (payload.user) {
+      localStorage.setItem('erp_user', JSON.stringify(payload.user));
+      setUser(payload.user);
     }
+    setToken(payload.token);
+    return payload;
   };
 
   const logout = () => {
     localStorage.removeItem('erp_token');
+    localStorage.removeItem('erp_user');
     setUser(null);
+    setToken(null);
+    window.location.href = '/login';
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+};
