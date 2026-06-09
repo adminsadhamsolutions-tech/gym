@@ -201,25 +201,39 @@ setMembers(membersData);
         </div>
       </div>
 
-      {/* Income Breakdown */}
-      <div className="grid gap-6 xl:grid-cols-3 mb-6">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-950">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Income Breakdown</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 dark:text-slate-300">Cash</span>
-              <span className="font-semibold text-slate-900 dark:text-slate-100">₹{ledgerData.cashIncome.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 dark:text-slate-300">Online</span>
-              <span className="font-semibold text-slate-900 dark:text-slate-100">₹{ledgerData.onlineIncome.toFixed(2)}</span>
-            </div>
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
-              <span className="font-semibold text-slate-900 dark:text-slate-100">Total</span>
-              <span className="font-bold text-sky-600 dark:text-orange-400">₹{Number(ledgerData.totalIncome || 0).toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
+{/* Income Breakdown */}
+<div className="grid gap-6 xl:grid-cols-3 mb-6">
+  <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-950">
+    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+      Income Breakdown
+    </h3>
+
+    <div className="space-y-3">
+      <div className="flex justify-between items-center">
+        <span className="text-slate-600 dark:text-slate-300">Cash</span>
+        <span className="font-semibold text-slate-900 dark:text-slate-100">
+          ₹{Number(ledgerData.cashIncome || 0).toFixed(2)}
+        </span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className="text-slate-600 dark:text-slate-300">Online</span>
+        <span className="font-semibold text-slate-900 dark:text-slate-100">
+          ₹{Number(ledgerData.onlineIncome || 0).toFixed(2)}
+        </span>
+      </div>
+
+      <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <span className="font-semibold text-slate-900 dark:text-slate-100">
+          Total
+        </span>
+        <span className="font-bold text-sky-600 dark:text-orange-400">
+          ₹{Number(ledgerData.totalIncome || 0).toFixed(2)}
+        </span>
+      </div>
+    </div>
+  </div>
+
 
         {/* Expense Breakdown */}
         <div className="xl:col-span-2 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-950">
@@ -232,7 +246,7 @@ setMembers(membersData);
                 {expensesByCategory.map((exp, idx) => (
                   <div key={idx} className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-300">{exp.category}</span>
-                    <span className="font-semibold text-slate-900 dark:text-slate-100">₹{exNumber(p.amount || 0).toFixed(2)}</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-100">₹{Number(exp.amount || 0).toFixed(2)}</span>
                   </div>
                 ))}
                 <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
