@@ -17,7 +17,7 @@ const Reports = () => {
       try {
        const [expensesRes, membersRes] = await Promise.all([
   axios.get('/expenses'),
-  axios.get('/members')
+  axios.get('/payments')
 ]);
 
 const membersData = membersRes.data.data || [];
