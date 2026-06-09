@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';
 
@@ -6,8 +6,10 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // 👈 NEW
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +55,7 @@ const Login = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
           <label className="block">
             <span className="text-sm font-medium text-slate-700">Email</span>
             <input
@@ -64,17 +67,31 @@ const Login = () => {
             />
           </label>
 
+          {/* Password with Eye Toggle */}
           <label className="block">
             <span className="text-sm font-medium text-slate-700">Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
-              className="mt-2 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-            />
+
+            <div className="relative mt-2">
+              <input
+                type={showPassword ? 'text' : 'password'} // 👈 TOGGLE
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Your password"
+                className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 pr-12 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+              />
+
+              {/* Eye Button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-slate-500 hover:text-slate-700"
+              >
+                {showPassword ? '🙈' : '👁'}
+              </button>
+            </div>
           </label>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
