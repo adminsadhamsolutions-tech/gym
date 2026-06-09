@@ -117,7 +117,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               </p>
 
               <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
-                ORIAN FITNESS
+                ORIEN FITNESS
               </p>
             </div>
           </div>
