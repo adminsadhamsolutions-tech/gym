@@ -112,13 +112,13 @@ setMembers(membersData);
     let csvContent = 'INCOME & EXPENSE LEDGER\n';
     csvContent += `Period: ${startDate} to ${endDate}\n\n`;
     csvContent += 'INCOME SUMMARY\n';
-    csvContent += `Total Income,${ledgerData.totalIncome.toFixed(2)}\n`;
+    csvContent += `Total Income,${Number(ledgerData.totalIncome || 0).toFixed(2)}\n`;
     csvContent += `Cash Income,${ledgerData.cashIncome.toFixed(2)}\n`;
     csvContent += `Online Income,${ledgerData.onlineIncome.toFixed(2)}\n\n`;
     csvContent += 'EXPENSE SUMMARY\n';
     csvContent += `Total Expenses,${ledgerData.totalExpenses.toFixed(2)}\n`;
     expensesByCategory.forEach(e => {
-      csvContent += `${e.category},${e.amount.toFixed(2)}\n`;
+      csvContent += `${e.category},${Number(e.amount || 0).toFixed(2)}\n`;
     });
     csvContent += '\nNET PROFIT\n';
     csvContent += `Net Profit,${ledgerData.netProfit.toFixed(2)}\n\n`;
@@ -126,11 +126,11 @@ setMembers(membersData);
     csvContent += 'Date,Type,Description,Amount\n';
     
     filteredData.filteredPayments.forEach(p => {
-      csvContent += `${new Date(p.created_at).toLocaleDateString()},Income,Payment from ${p.member_name || 'Unknown'} (${p.type}),${p.amount.toFixed(2)}\n`;
+      csvContent += `${new Date(p.created_at).toLocaleDateString()},Income,Payment from ${p.member_name || 'Unknown'} (${p.type}),${Number(p.amount || 0).toFixed(2)}\n`;
     });
     
     filteredData.filteredExpenses.forEach(e => {
-      csvContent += `${e.date},Expense,${e.category} - ${e.description || ''},${e.amount.toFixed(2)}\n`;
+      csvContent += `${e.date},Expense,${e.category} - ${e.description || ''},${Number(e.amount || 0).toFixed(2)}\n`;
     });
 
     const link = document.createElement('a');
@@ -186,7 +186,7 @@ setMembers(membersData);
       <div className="grid gap-6 xl:grid-cols-3 mb-6">
         <div className="rounded-3xl border-l-4 border-l-sky-500 border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-950">
           <p className="text-sm uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Total Income</p>
-          <p className="text-4xl font-semibold text-sky-600 dark:text-orange-400">₹{ledgerData.totalIncome.toFixed(2)}</p>
+          <p className="text-4xl font-semibold text-sky-600 dark:text-orange-400">₹{Number(ledgerData.totalIncome || 0).toFixed(2)}</p>
           <p className="text-xs text-slate-500 mt-2 dark:text-slate-400">{ledgerData.incomeCount} transactions</p>
         </div>
         <div className="rounded-3xl border-l-4 border-l-red-500 border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-950">
@@ -216,7 +216,7 @@ setMembers(membersData);
             </div>
             <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
               <span className="font-semibold text-slate-900 dark:text-slate-100">Total</span>
-              <span className="font-bold text-sky-600 dark:text-orange-400">₹{ledgerData.totalIncome.toFixed(2)}</span>
+              <span className="font-bold text-sky-600 dark:text-orange-400">₹{Number(ledgerData.totalIncome || 0).toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@ setMembers(membersData);
                 {expensesByCategory.map((exp, idx) => (
                   <div key={idx} className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-300">{exp.category}</span>
-                    <span className="font-semibold text-slate-900 dark:text-slate-100">₹{exp.amount.toFixed(2)}</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-100">₹{exNumber(p.amount || 0).toFixed(2)}</span>
                   </div>
                 ))}
                 <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
@@ -290,7 +290,7 @@ setMembers(membersData);
                 </td>
                 <td className="px-6 py-4">{row.description}</td>
                 <td className={`px-6 py-4 font-semibold text-right ${row.isIncome ? 'text-sky-600 dark:text-orange-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {row.isIncome ? '+' : '-'}₹{row.amount.toFixed(2)}
+                  {row.isIncome ? '+' : '-'}₹{Number(row.amount || 0).toFixed(2)}
                 </td>
               </tr>
             ))}
