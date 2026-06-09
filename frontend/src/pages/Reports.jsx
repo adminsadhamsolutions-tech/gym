@@ -15,10 +15,9 @@ const Reports = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-const [expensesRes, paymentsRes] = await Promise.all([
+       const [expensesRes, membersRes] = await Promise.all([
   axios.get('/expenses'),
   axios.get('/payments')
-
 ]);
 
 const membersData = membersRes.data.data || [];
