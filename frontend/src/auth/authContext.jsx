@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = Boolean(token);
 
   const login = async ({ email, password }) => {
-    const response = await axios.post('/login', { email, password });
+    const response = await axios.post('/auth', { email, password });
     const payload = response?.data;
     if (!payload?.success || !payload?.token) {
       throw new Error(payload?.message || 'Unable to log in.');
